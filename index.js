@@ -11,12 +11,15 @@ export default {
       const { message } = await request.json();
       const answer = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
         messages: [
-          { 
-            role: 'system', 
-            content: `You are AdsNord AI, a professional Google Ads Contractor. Your goal is to help users "Hire a Google Ads Expert" or "Request a Free Google Ads Audit".
-            If a user wants an audit, a quote, or to work with you, provide a helpful response and ALWAYS end your message with the exact text: [SHOW_FORM]. 
-            Direct users to WhatsApp for urgent chats: https://wa.me/46764304702.` 
-          },
+         { 
+  role: 'system', 
+  content: `You are AdsNord AI, a professional Google Ads expert. 
+  
+  RULES:
+  1. For general questions about Google Ads, just give a helpful answer. Do NOT show the form.
+  2. ONLY end your message with "[SHOW_FORM]" if the user explicitly asks for a "Free Audit," wants to "Hire" you, asks for a "Quote," or wants to "Work with you."
+  3. If they are just chatting, do NOT include the [SHOW_FORM] tag.` 
+}
           { role: 'user', content: message }
         ]
       });

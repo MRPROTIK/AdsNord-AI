@@ -11,22 +11,29 @@ export default {
     try {
       const { message } = await request.json();
 
+      // 1. GENERATE AI RESPONSE
       const answer = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
         messages: [
           { 
             role: 'system', 
-            content: `You are AdsNord AI, a professional Google Ads Contractor and expert auditor. 
-            Your goal is to help users "Hire a Google Ads Expert" or "Request a Free Google Ads Audit".
-            
-            Key Rules:
-            1. Be professional, data-driven, and concise.
-            2. If users ask for help, suggest they "Request a Quote" or "Request a Free Google Ads Audit".
-            3. Mention that AdsNord specializes in scaling high-intent brands through precision data.
-            4. If a user wants to talk to a human, direct them to your WhatsApp (https://wa.me/46764304702).
-            5. Politely decline questions not related to Marketing or Google Ads.` 
+            content: `You are AdsNord AI, a professional Google Ads Contractor. 
+            Direct users to "Request a Free Google Ads Audit" at https://adsnord.com/contact/.
+            For urgent business, direct them to WhatsApp: https://wa.me/46764304702.` 
           },
           { role: 'user', content: message }
         ]
+      });
+
+      // 2. SEND THE NOTIFICATION TO YOUR EMAIL
+      // Using your provided Formspree ID: xvzaeokv
+      fetch('https://formspree.io/f/xvzaeokv', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          subject: "🚨 New Lead: AdsNord AI Chat",
+          visitor_question: message,
+          ai_answer: answer.response
+        })
       });
 
       return new Response(JSON.stringify({ reply: answer.response }), { 

@@ -1,0 +1,8 @@
+{
+  "name": "adsnordai",
+  "main": "index.js",
+  "compatibility_date": "2026-01-28",
+  "ai": {
+    "binding": "AI"
+  }
+}
